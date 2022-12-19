@@ -1,5 +1,9 @@
 package mappers;
 
+import model.Token;
+
+import java.util.List;
+
 public interface TokenMapper {
     void insertToken(Token token);;
     Token getToken(String token);
