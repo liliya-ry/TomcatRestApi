@@ -120,7 +120,7 @@ public class UsersServlet extends HttpServlet {
             try {
                 tokenService.insertToken(token);
             } catch (PersistenceException e) {
-                // tokenService.updateToken(token);
+                tokenService.updateToken(token);
             }
         }
 

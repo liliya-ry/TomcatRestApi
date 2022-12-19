@@ -34,6 +34,10 @@
     <servlet-name>CommentsServlet</servlet-name>
   </filter-mapping>
 
+  <listener>
+    <listener-class>token.TokenListener</listener-class>
+  </listener>
+
   <servlet>
     <servlet-name>PostsServlet</servlet-name>
     <servlet-class>servlets.PostsServlet</servlet-class>

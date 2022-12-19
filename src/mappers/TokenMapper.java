@@ -10,4 +10,5 @@ public interface TokenMapper {
     Token getTokenByUser(int userId);
     List<Token> getAllTokens();
     void deleteToken(String token);
+    void updateToken(Token token);
 }

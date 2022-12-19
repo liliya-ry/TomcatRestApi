@@ -38,6 +38,13 @@
         )
     </insert>
 
+    <update id='updateToken' parameterType='Token' useGeneratedKeys='true' keyProperty='id'>
+        UPDATE TOKENS
+        SET
+        TOKEN = #{token}
+        WHERE USER_ID = #{userId}
+    </update>
+
     <delete id='deleteToken' parameterType='String'>
         DELETE FROM TOKENS WHERE TOKEN = #{token}
     </delete>

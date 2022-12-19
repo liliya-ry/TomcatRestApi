@@ -63,4 +63,12 @@ public class TokenService {
             sqlSession.commit();
         }
     }
+
+    public void updateToken(Token token) {
+        try (SqlSession sqlSession = factory.openSession()) {
+            TokenMapper tokenMapper = sqlSession.getMapper(TokenMapper.class);
+            tokenMapper.updateToken(token);
+            sqlSession.commit();
+        }
+    }
 }
