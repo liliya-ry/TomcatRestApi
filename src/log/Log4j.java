@@ -1,6 +1,6 @@
 package log;
 
-import com.mysql.cj.log.Log;
+import com.mysql.jdbc.log.Log;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
