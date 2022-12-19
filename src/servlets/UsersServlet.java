@@ -3,7 +3,10 @@ package servlets;
 import static javax.servlet.http.HttpServletResponse.*;
 
 import com.google.gson.*;
+import model.Token;
 import model.User;
+import org.apache.ibatis.exceptions.PersistenceException;
+import service.TokenService;
 import service.UserService;
 import utility.*;
 
@@ -17,14 +20,17 @@ import java.util.regex.*;
 public class UsersServlet extends HttpServlet {
     private static final Pattern LOGIN_PATTERN = Pattern.compile("/login/?");
     private static final Pattern REGISTER_PATTERN = Pattern.compile("/register/?");
-    private UserService service;
+
+    private UserService userService;
+    private TokenService tokenService;
     private ResponseHandler responseHandler;
     private Gson gson;
 
     @Override
     public void init() {
         gson = new GsonBuilder().setPrettyPrinting().create();
-        service = new UserService(this.getServletContext());
+        userService = new UserService(this.getServletContext());
+        tokenService = new TokenService(this.getServletContext());
         responseHandler = new ResponseHandler(gson);
     }
 
@@ -57,11 +63,11 @@ public class UsersServlet extends HttpServlet {
         }
 
         String validPassword = user.getPassword();
-        int salt = user.generateSalt();
-        String encryptedPassword = PasswordEncryptor.encryptPassword(validPassword + salt);
+        int salt = user.getSalt();
+        String encryptedPassword = Encryptor.encrypt(validPassword + salt);
 
         user.setPassword(encryptedPassword);
-        service.insertUser(user);
+        userService.insertUser(user);
         responseHandler.sendAsJson(response, user);
     }
 
@@ -74,7 +80,7 @@ public class UsersServlet extends HttpServlet {
             return false;
         }
 
-        User user = service.getUser(username);
+        User user = userService.getUser(username);
         if (user == null) {
             responseHandler.sendError(response, SC_UNAUTHORIZED, "Bad credentials: no user with this username/password");
             return false;
@@ -82,15 +88,15 @@ public class UsersServlet extends HttpServlet {
 
         String validPassword = user.getPassword();
         int salt = user.getSalt();
-        String encryptedPassword = PasswordEncryptor.encryptPassword(password + salt);
+        String encryptedPassword = Encryptor.encrypt(password + salt);
 
         if (!encryptedPassword.equals(validPassword)) {
             responseHandler.sendError(response, SC_UNAUTHORIZED, "Bad credentials: no user with this username/password");
             return false;
         }
 
-        HttpSession session = request.getSession(true);
-        session.setAttribute("user", username);
+        String token = processToken(user.getId());
+        response.addHeader("Authorization", "Bearer " + token);
         return true;
     }
 
@@ -103,5 +109,21 @@ public class UsersServlet extends HttpServlet {
             username = reader.readLine();
         }
         return username;
+    }
+
+    private String processToken(int userId) {
+        Token token = tokenService.getTokenByUser(userId);
+        if (token == null) {
+            int tokenNum = Encryptor.generateSalt();
+            String tokenStr = Encryptor.encrypt(String.valueOf(tokenNum));
+            token = new Token(tokenStr, userId);
+            try {
+                tokenService.insertToken(token);
+            } catch (PersistenceException e) {
+                // tokenService.updateToken(token);
+            }
+        }
+
+        return token.getToken();
     }
 }

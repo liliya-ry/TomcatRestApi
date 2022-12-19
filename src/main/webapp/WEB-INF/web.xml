@@ -6,7 +6,7 @@
   <display-name>Archetype Created Web Application</display-name>
   <filter>
     <filter-name>AuthenticationFilter</filter-name>
-    <filter-class>filters.AuthenticationFilter</filter-class>
+    <filter-class>filters.AuthorizationFilter</filter-class>
   </filter>
 
   <filter>
@@ -32,11 +32,6 @@
   <filter-mapping>
     <filter-name>LoggingFilter</filter-name>
     <servlet-name>CommentsServlet</servlet-name>
-  </filter-mapping>
-
-  <filter-mapping>
-    <filter-name>LoggingFilter</filter-name>
-    <servlet-name>UsersServlet</servlet-name>
   </filter-mapping>
 
   <servlet>

@@ -2,8 +2,10 @@ package service;
 
 import mappers.TokenMapper;
 import model.Token;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.*;
 import javax.servlet.ServletContext;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -12,6 +14,16 @@ public class TokenService {
 
     public TokenService(ServletContext sc) {
         InputStream in = sc.getResourceAsStream("/WEB-INF/mybatis-config.xml");
+        factory = new SqlSessionFactoryBuilder().build(in);
+    }
+
+    public TokenService() {
+        InputStream in;
+        try {
+            in = Resources.getResourceAsStream("main/webapp/WEB-INF/mybatis-config.xml");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         factory = new SqlSessionFactoryBuilder().build(in);
     }
 

@@ -3,9 +3,12 @@ package utility;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
-public class PasswordEncryptor {
-    public static String encryptPassword(String password) {
+public class Encryptor {
+    private static final Random RANDOM = new Random();
+
+    public static String encrypt(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             byte[] messageDigest = md.digest(password.getBytes());
@@ -21,5 +24,9 @@ public class PasswordEncryptor {
         catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static int generateSalt() {
+        return RANDOM.nextInt();
     }
 }

@@ -26,8 +26,7 @@ public class LoggingFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) resp;
         int status = response.getStatus();
 
-        HttpSession session = request.getSession(false);
-        String user = session != null ? session.getAttribute("user").toString() : "unknown";
+        String token = request.getHeader("Authentication");
         String method = request.getMethod();
 
         String pathInfo = request.getPathInfo();
@@ -36,7 +35,7 @@ public class LoggingFilter implements Filter {
         }
         String path = request.getServletPath() + pathInfo;
 
-        logger.info("User: {}, Method: {}, Path: {}, Status: {}, Execution Time: {} ms", user, method, path, status, execTime);
+        logger.info("Token: {}, Method: {}, Path: {}, Status: {}, Execution Time: {} ms", token, method, path, status, execTime);
     }
 
     @Override

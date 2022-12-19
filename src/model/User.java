@@ -1,9 +1,8 @@
 package model;
 
-import java.util.Random;
+import utility.Encryptor;
 
 public class User {
-    private static final Random RANDOM = new Random();
     int id;
     String username;
     String password;
@@ -19,14 +18,11 @@ public class User {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.salt = Encryptor.generateSalt();
     }
 
     public int getSalt() {
         return salt;
-    }
-
-    public int generateSalt() {
-        return this.salt = RANDOM.nextInt();
     }
 
     public String getPassword() {
@@ -35,5 +31,9 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getId() {
+        return id;
     }
 }
