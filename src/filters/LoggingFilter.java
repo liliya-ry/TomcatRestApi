@@ -8,7 +8,7 @@ import java.io.IOException;
 
 
 public class LoggingFilter implements Filter {
-    private Logger logger = LogManager.getLogger("blogApi");
+    private final Logger logger = LogManager.getLogger("blogApi");
 
     @Override
     public void init(FilterConfig filterConfig) {}
